@@ -62,39 +62,19 @@ func New(
 	listModel.AdditionalShortHelpKeys = func() []key.Binding {
 		return []key.Binding{
 			openDirectoryKey,
-			createFileKey,
-			createDirectoryKey,
-			deleteItemKey,
-			copyItemKey,
-			zipItemKey,
-			unzipItemKey,
 			toggleHiddenKey,
 			homeShortcutKey,
-			copyToClipboardKey,
 			escapeKey,
-			renameItemKey,
-			openInEditorKey,
-			submitInputKey,
-			moveItemKey,
+			selectItemKey,
 		}
 	}
 	listModel.AdditionalFullHelpKeys = func() []key.Binding {
 		return []key.Binding{
 			openDirectoryKey,
-			createFileKey,
-			createDirectoryKey,
-			deleteItemKey,
-			copyItemKey,
-			zipItemKey,
-			unzipItemKey,
 			toggleHiddenKey,
 			homeShortcutKey,
-			copyToClipboardKey,
 			escapeKey,
-			renameItemKey,
-			openInEditorKey,
-			submitInputKey,
-			moveItemKey,
+			selectItemKey,
 		}
 	}
 

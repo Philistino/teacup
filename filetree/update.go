@@ -2,7 +2,6 @@ package filetree
 
 import (
 	"github.com/charmbracelet/bubbles/key"
-	"github.com/charmbracelet/bubbles/textinput"
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/knipferrc/teacup/dirfs"
 )
@@ -38,124 +37,16 @@ func (b Bubble) Update(msg tea.Msg) (Bubble, tea.Cmd) {
 		if !b.active {
 			return b, nil
 		}
-
-		switch b.state {
-		case deleteItemState:
-			if msg.String() == yesKey {
-				selectedItem := b.GetSelectedItem()
-
-				statusCmd := b.list.NewStatusMessage(
-					statusMessageInfoStyle("Successfully deleted item"),
-				)
-
-				cmds = append(cmds, statusCmd, tea.Sequentially(
-					deleteItemCmd(selectedItem.fileName),
-					getDirectoryListingCmd(dirfs.CurrentDirectory, b.showHidden, b.showIcons),
-				))
-
-				b.state = idleState
-
-				return b, tea.Batch(cmds...)
-			}
-		case moveItemState:
-			if msg.String() == enterKey {
-				statusCmd := b.list.NewStatusMessage(
-					statusMessageInfoStyle("Successfully moved item"),
-				)
-
-				cmds = append(cmds, statusCmd, tea.Sequentially(
-					moveItemCmd(b.itemToMove.path, b.itemToMove.shortName),
-					getDirectoryListingCmd(dirfs.CurrentDirectory, b.showHidden, b.showIcons),
-				))
-
-				b.state = idleState
-
-				return b, tea.Batch(cmds...)
-			}
-		}
-
 		switch {
 		case key.Matches(msg, openDirectoryKey):
 			if !b.input.Focused() {
 				selectedDir := b.GetSelectedItem()
 				cmds = append(cmds, getDirectoryListingCmd(selectedDir.fileName, b.showHidden, b.showIcons))
 			}
-		case key.Matches(msg, copyItemKey):
+		case key.Matches(msg, selectItemKey):
 			if !b.input.Focused() {
-				selectedItem := b.GetSelectedItem()
-				statusCmd := b.list.NewStatusMessage(
-					statusMessageInfoStyle("Successfully copied file"),
-				)
-
-				cmds = append(cmds, statusCmd, tea.Sequentially(
-					copyItemCmd(selectedItem.fileName),
-					getDirectoryListingCmd(dirfs.CurrentDirectory, b.showHidden, b.showIcons),
-				))
-			}
-		case key.Matches(msg, zipItemKey):
-			if !b.input.Focused() {
-				selectedItem := b.GetSelectedItem()
-				statusCmd := b.list.NewStatusMessage(
-					statusMessageInfoStyle("Successfully zipped item"),
-				)
-
-				cmds = append(cmds, statusCmd, tea.Sequentially(
-					zipItemCmd(selectedItem.fileName),
-					getDirectoryListingCmd(dirfs.CurrentDirectory, b.showHidden, b.showIcons),
-				))
-			}
-		case key.Matches(msg, unzipItemKey):
-			if !b.input.Focused() {
-				selectedItem := b.GetSelectedItem()
-				statusCmd := b.list.NewStatusMessage(
-					statusMessageInfoStyle("Successfully unzipped item"),
-				)
-
-				cmds = append(cmds, statusCmd, tea.Sequentially(
-					unzipItemCmd(selectedItem.fileName),
-					getDirectoryListingCmd(dirfs.CurrentDirectory, b.showHidden, b.showIcons),
-				))
-			}
-		case key.Matches(msg, createFileKey):
-			if !b.input.Focused() {
-				b.input.Focus()
-				b.input.Placeholder = "Enter name of new file"
-				b.state = createFileState
-
-				return b, textinput.Blink
-			}
-		case key.Matches(msg, createDirectoryKey):
-			if !b.input.Focused() {
-				b.input.Focus()
-				b.input.Placeholder = "Enter name of new directory"
-				b.state = createDirectoryState
-
-				return b, textinput.Blink
-			}
-		case key.Matches(msg, deleteItemKey):
-			if !b.input.Focused() {
-				b.state = deleteItemState
-
-				return b, nil
-			}
-		case key.Matches(msg, moveItemKey):
-			if !b.input.Focused() {
-				selectedItem := b.GetSelectedItem()
-				b.state = moveItemState
-				b.itemToMove = itemToMove{
-					shortName: selectedItem.shortName,
-					path:      selectedItem.fileName,
-				}
-
-				return b, nil
-			}
-		case key.Matches(msg, renameItemKey):
-			if !b.input.Focused() {
-				b.input.Focus()
-				b.input.Placeholder = "Enter new name"
-				b.state = renameItemState
-
-				return b, textinput.Blink
+				selectedDir := b.GetSelectedItem()
+				cmds = append(cmds, getDirectoryListingCmd(selectedDir.fileName, b.showHidden, b.showIcons))
 			}
 		case key.Matches(msg, toggleHiddenKey):
 			if !b.input.Focused() {
@@ -170,11 +61,7 @@ func (b Bubble) Update(msg tea.Msg) (Bubble, tea.Cmd) {
 			if !b.input.Focused() {
 				cmds = append(cmds, getDirectoryListingCmd(dirfs.RootDirectory, b.showHidden, b.showIcons))
 			}
-		case key.Matches(msg, copyToClipboardKey):
-			if !b.input.Focused() {
-				selectedItem := b.GetSelectedItem()
-				cmds = append(cmds, copyToClipboardCmd(selectedItem.fileName))
-			}
+
 		case key.Matches(msg, escapeKey):
 			b.state = idleState
 
@@ -182,20 +69,7 @@ func (b Bubble) Update(msg tea.Msg) (Bubble, tea.Cmd) {
 				b.input.Reset()
 				b.input.Blur()
 			}
-		case key.Matches(msg, openInEditorKey):
-			if !b.input.Focused() {
-				selectedItem := b.GetSelectedItem()
-
-				if b.selectionPath == "" && !selectedItem.IsDirectory() {
-					return b, openInEditor(selectedItem.FileName())
-				}
-
-				return b, tea.Sequentially(
-					writeSelectionPathCmd(b.selectionPath, selectedItem.ShortName()),
-					tea.Quit,
-				)
-			}
-		case key.Matches(msg, submitInputKey):
+		case key.Matches(msg, selectItemKey):
 			selectedItem := b.GetSelectedItem()
 
 			switch b.state {
