@@ -13,7 +13,6 @@ require (
 	github.com/ledongthuc/pdf v0.0.0-20220302134840-0c2507a12d80
 	github.com/lucasb-eyer/go-colorful v1.2.0
 	github.com/muesli/reflow v0.3.0
-	github.com/philistino/teacup v0.0.0-20230407171354-66d89219823c
 )
 
 require (
