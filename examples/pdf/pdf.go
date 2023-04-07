@@ -5,7 +5,7 @@ import (
 
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
-	"github.com/knipferrc/teacup/pdf"
+	"github.com/philistino/teacup/pdf"
 )
 
 // Bubble represents the properties of the UI.

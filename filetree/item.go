@@ -6,7 +6,7 @@ import (
 	"path/filepath"
 
 	"github.com/charmbracelet/lipgloss"
-	"github.com/knipferrc/teacup/icons"
+	"github.com/philistino/teacup/icons"
 )
 
 // fileIconWidth represents the width of the file icons.

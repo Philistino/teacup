@@ -3,7 +3,7 @@ package filetree
 import (
 	"github.com/charmbracelet/bubbles/key"
 	tea "github.com/charmbracelet/bubbletea"
-	"github.com/knipferrc/teacup/dirfs"
+	"github.com/philistino/teacup/dirfs"
 )
 
 const (

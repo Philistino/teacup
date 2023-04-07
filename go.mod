@@ -1,4 +1,4 @@
-module github.com/knipferrc/teacup
+module github.com/philistino/teacup
 
 go 1.19
 
